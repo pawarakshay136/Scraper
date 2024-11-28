@@ -2,59 +2,53 @@ plugins {
     id 'java'
 }
 
-
-
-// Apply the java plugin to add support for Java
 apply plugin: 'java'
 apply plugin: 'application'
 apply plugin: 'checkstyle'
-
 
 group 'org.example'
 version '1.0-SNAPSHOT'
 
 repositories {
-    mavenCentral()
+    mavenCentral() // To fetch dependencies from Maven Central repository
 }
 
 dependencies {
-
     testImplementation 'org.testng:testng:6.9.10'
 
-    // https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-java
+    // Selenium WebDriver dependency
     implementation 'org.seleniumhq.selenium:selenium-java:4.21.0'
 
+    // Jackson Databind dependency for JSON handling
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.2'
 }
 
 buildDir = 'build'
 
 test {
     useTestNG() {
-        useDefaultListeners = true // generates the test report
+        useDefaultListeners = true // Generates the TestNG report
         suites "src/test/resources/testng.xml"
     }
 
     afterSuite { desc, result ->
-            if (!desc.parent) {
-                println "\nTEST RESULT: ${result.resultType}"
-                println "TEST SUMMARY: RAN ${result.testCount} TESTS, " +
-                        "${result.successfulTestCount} SUCCEEDED, " +
-                        "${result.failedTestCount} FAILED, " +
-                        "${result.skippedTestCount} SKIPPED"
-            }
+        if (!desc.parent) {
+            println "\nTEST RESULT: ${result.resultType}"
+            println "TEST SUMMARY: RAN ${result.testCount} TESTS, " +
+                    "${result.successfulTestCount} SUCCEEDED, " +
+                    "${result.failedTestCount} FAILED, " +
+                    "${result.skippedTestCount} SKIPPED"
+        }
     }
 
     testLogging {
-		events "PASSED", "SKIPPED", "FAILED", "STANDARD_OUT", "STANDARD_ERROR"
+        events "PASSED", "SKIPPED", "FAILED", "STANDARD_OUT", "STANDARD_ERROR"
         exceptionFormat = 'full'
-
-        // Optionally do:
         showStackTraces = true
-	}
+    }
 
     testLogging.showStandardStreams = true
-    test.outputs.upToDateWhen {false}
-
+    test.outputs.upToDateWhen { false }
 }
 
 mainClassName = 'demo.App'
@@ -68,9 +62,9 @@ checkstyle {
 
 tasks.withType(Checkstyle) {
     reports {
-            xml.required = true
-            html.required = false
-        }
+        xml.required = true
+        html.required = false
+    }
 }
 
 test {
